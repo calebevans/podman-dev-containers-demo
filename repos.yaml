@@ -1,0 +1,4 @@
+repositories:
+- api
+- microservice-1
+- microservice-2

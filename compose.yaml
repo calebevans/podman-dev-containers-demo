@@ -1,0 +1,94 @@
+services:
+  # Dev container services
+  api:
+    container_name: api
+    image: "demo-dev-java:17"
+    env_file:
+      - ./.devcontainer/common.env
+      - ./.devcontainer/api/var.env
+    volumes:
+      - ~/.ssh:/root/.ssh:cached,z
+      - ./repos:/root/repos:cached,z
+    networks:
+      - demo-network
+
+  microservice-1:
+    container_name: microservice-1
+    image: "demo-dev-java:17"
+    env_file:
+      - ./.devcontainer/common.env
+      - ./.devcontainer/microservice-1/var.env
+    volumes:
+      - ~/.ssh:/root/.ssh:cached,z
+      - ./repos:/root/repos:cached,z
+    networks:
+      - demo-network
+
+  microservice-2:
+    container_name: microservice-2
+    image: "demo-dev-java:17"
+    env_file:
+      - ./.devcontainer/common.env
+      - ./.devcontainer/microservice-2/var.env
+    volumes:
+      - ~/.ssh:/root/.ssh:cached,z
+      - ./repos:/root/repos:cached,z
+    networks:
+      - demo-network
+
+  # Supporting infrastructure 
+  kafka:
+    hostname: kafka
+    image: docker.io/wurstmeister/kafka:latest
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT
+      - KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+      - KAFKA_CREATE_TOPICS=demo-topic-one:1:1,demo-topic-two:1:1
+    volumes:
+      - type: tmpfs
+        target: /kafka
+    depends_on:
+      - zookeeper
+    networks:
+      - demo-network
+
+  postgres:
+    container_name: postgres
+    image: postgres:16
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demopassword
+      POSTGRES_DB: demodb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - demo-network
+
+  zookeeper:
+    hostname: zookeeper
+    image: docker.io/bitnami/zookeeper:3.8
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    volumes:
+      - type: tmpfs
+        target: /bitnami/zookeeper
+    networks:
+      - demo-network
+
+networks:
+  demo-network:
+    driver: bridge
+
+volumes:
+  postgres-data:

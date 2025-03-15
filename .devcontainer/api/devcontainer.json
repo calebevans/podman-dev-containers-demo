@@ -1,0 +1,23 @@
+{
+    "name": "api",
+    "dockerComposeFile": [
+      "../../compose.yaml"
+    ],
+    "service": "api",
+    "workspaceFolder": "/root/repos/api",
+    "updateRemoteUserUID": true,
+    "remoteUser": "root",
+    "onCreateCommand": "/bin/bash /tmp/scripts/on-create.sh",
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "chat.commandCenter.enabled": false,
+          "editor.renderWhitespace": "all"
+        },
+        "extensions": [
+          "redhat.vscode-yaml",
+          "redhat.vscode-xml"
+        ]
+      }
+    }
+  }

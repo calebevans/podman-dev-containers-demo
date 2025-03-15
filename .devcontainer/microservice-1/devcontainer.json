@@ -1,0 +1,25 @@
+{
+    "name": "microservice-1",
+    "dockerComposeFile": [
+      "../../compose.yaml"
+    ],
+    "service": "microservice-1",
+    "workspaceFolder": "/root/repos/microservice-1",
+    "updateRemoteUserUID": true,
+    "remoteUser": "root",
+    "onCreateCommand": "/bin/bash /tmp/scripts/on-create.sh",
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "chat.commandCenter.enabled": false,
+          "editor.renderWhitespace": "all"
+        },
+        "extensions": [
+          "redhat.java",
+          "redhat.vscode-quarkus",
+          "redhat.vscode-yaml",
+          "redhat.vscode-xml"
+        ]
+      }
+    }
+  }

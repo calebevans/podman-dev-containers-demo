@@ -1,0 +1,23 @@
+FROM mcr.microsoft.com/devcontainers/java:17
+
+ENV HOME="/root"
+ENV PATH="/opt/venv/bin:$PATH"
+ENV SERVICE_LANG="java"
+
+COPY --chmod=0755 Containerfiles/scripts /tmp/scripts
+
+RUN apt update -y \
+    && apt -y install --no-install-recommends \
+        kafkacat \
+        curl \
+        maven \
+        python3-pip \
+        python3-venv \
+    && apt clean
+
+RUN mkdir -p /opt/venv && \
+    python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --upgrade pip && \
+    /opt/venv/bin/pip install pre-commit
+
+CMD ["sleep", "infinity"]
